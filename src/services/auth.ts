@@ -17,7 +17,7 @@ const mockUsers = [
     password: 'password',
     firstName: 'Company',
     lastName: 'Admin',
-    role: UserRole.COMPANY_ADMIN,
+    role: UserRole.ADMIN,
     companyId: '1',
     isActive: true,
   },

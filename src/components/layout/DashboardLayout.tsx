@@ -13,7 +13,8 @@ import {
   Cog6ToothIcon,
   ArrowLeftOnRectangleIcon,
   Bars3Icon,
-  XMarkIcon
+  XMarkIcon,
+  UsersIcon
 } from '@heroicons/react/24/outline';
 
 interface DashboardLayoutProps {
@@ -29,6 +30,7 @@ export default function DashboardLayout({ children }: DashboardLayoutProps) {
     { name: 'Dashboard', href: '/dashboard', icon: HomeIcon },
     { name: 'Companies', href: '/dashboard/companies', icon: BuildingOfficeIcon },
     { name: 'Employees', href: '/dashboard/employees', icon: UserGroupIcon },
+    { name: 'Users', href: '/dashboard/users', icon: UsersIcon },
     { name: 'Leave Requests', href: '/dashboard/leave-requests', icon: CalendarIcon },
     { name: 'Reports', href: '/dashboard/reports', icon: ChartBarIcon },
     { name: 'Settings', href: '/dashboard/settings', icon: Cog6ToothIcon },

@@ -1,22 +1,28 @@
 export enum UserRole {
-  SUPER_ADMIN = 'SUPER_ADMIN',
-  COMPANY_ADMIN = 'COMPANY_ADMIN',
-  MANAGER = 'MANAGER',
-  EMPLOYEE = 'EMPLOYEE',
+  SUPER_ADMIN = 'super_admin',
+  ADMIN = 'admin',
+  MANAGER = 'manager',
+  EMPLOYEE = 'employee',
 }
 
 export interface User {
   id: string;
   email: string;
-  password: string; // Hashed password
   firstName: string;
   lastName: string;
   role: UserRole;
-  companyId?: string; // Optional for SUPER_ADMIN
-  createdAt: Date;
-  updatedAt: Date;
-  isActive: boolean;
-  lastLoginAt?: Date;
+  status: 'active' | 'inactive';
+  createdAt: string;
+  updatedAt: string;
+}
+
+export interface UserFormData {
+  email: string;
+  firstName: string;
+  lastName: string;
+  role: UserRole;
+  status: 'active' | 'inactive';
+  password?: string;
 }
 
 export interface UserProfile {

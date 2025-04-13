@@ -5,12 +5,15 @@ import { useEmployees } from '@/hooks/useEmployees';
 import { useCompanies } from '@/hooks/useCompanies';
 import { Employee, EmployeeFormData } from '@/models/employee';
 import { PlusIcon, PencilIcon, TrashIcon } from '@heroicons/react/24/outline';
+import { usePermissions } from '@/contexts/PermissionsContext';
+import { Input, Select } from '@/components/ui';
 
 export default function EmployeesPage() {
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [editingEmployee, setEditingEmployee] = useState<Employee | null>(null);
     const [selectedCompanyId, setSelectedCompanyId] = useState<string>('');
 
+    const { userCompanyId, canManageCompanies } = usePermissions();
     const { companies } = useCompanies();
     const {
         employees,
@@ -22,7 +25,7 @@ export default function EmployeesPage() {
         isCreating,
         isUpdating,
         isDeleting
-    } = useEmployees(selectedCompanyId);
+    } = useEmployees(selectedCompanyId || userCompanyId || undefined);
 
     const handleCreate = () => {
         setEditingEmployee(null);
@@ -94,25 +97,24 @@ export default function EmployeesPage() {
                 </div>
             </div>
 
-            <div className="mt-4">
-                <label htmlFor="company" className="block text-sm font-medium text-gray-700">
-                    Filter by Company
-                </label>
-                <select
-                    id="company"
-                    name="company"
-                    className="mt-1 block w-full rounded-md border-gray-500 bg-white text-gray-400 py-2 pl-3 pr-10 text-base focus:border-blue-500 focus:outline-none focus:ring-blue-500 sm:text-sm"
-                    value={selectedCompanyId}
-                    onChange={(e) => setSelectedCompanyId(e.target.value)}
-                >
-                    <option value="">All Companies</option>
-                    {companies?.map((company) => (
-                        <option key={company.id} value={company.id}>
-                            {company.name}
-                        </option>
-                    ))}
-                </select>
-            </div>
+            {canManageCompanies && (
+                <div className="mt-4">
+                    <Select
+                        label="Filter by Company"
+                        id="company"
+                        name="company"
+                        value={selectedCompanyId}
+                        onChange={(value) => setSelectedCompanyId(value)}
+                        options={[
+                            { value: '', label: 'All Companies' },
+                            ...(companies?.map((company) => ({
+                                value: company.id,
+                                label: company.name
+                            })) || [])
+                        ]}
+                    />
+                </div>
+            )}
 
             <div className="mt-8 flow-root">
                 <div className="-mx-4 -my-2 overflow-x-auto sm:-mx-6 lg:-mx-8">
@@ -195,137 +197,94 @@ export default function EmployeesPage() {
                         <form onSubmit={handleSubmit}>
                             <div className="space-y-4">
                                 <div className="grid grid-cols-2 gap-4">
-                                    <div>
-                                        <label htmlFor="firstName" className="block text-sm font-medium text-gray-700">
-                                            First Name
-                                        </label>
-                                        <input
-                                            type="text"
-                                            name="firstName"
-                                            id="firstName"
-                                            defaultValue={editingEmployee?.firstName}
-                                            required
-                                            className="mt-1 p-2.5 text-gray-600 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm"
-                                        />
-                                    </div>
-                                    <div>
-                                        <label htmlFor="lastName" className="block text-sm font-medium text-gray-700">
-                                            Last Name
-                                        </label>
-                                        <input
-                                            type="text"
-                                            name="lastName"
-                                            id="lastName"
-                                            defaultValue={editingEmployee?.lastName}
-                                            required
-                                            className="mt-1 p-2.5 text-gray-600 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm"
-                                        />
-                                    </div>
-                                </div>
-                                <div className="grid grid-cols-2 gap-4">
-                                    <div>
-                                        <label htmlFor="email" className="block text-sm font-medium text-gray-700">
-                                            Email
-                                        </label>
-                                        <input
-                                            type="email"
-                                            name="email"
-                                            id="email"
-                                            defaultValue={editingEmployee?.email}
-                                            required
-                                            className="mt-1 p-2.5 text-gray-600 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm"
-                                        />
-                                    </div>
-                                    <div>
-                                        <label htmlFor="phone" className="block text-sm font-medium text-gray-700">
-                                            Phone
-                                        </label>
-                                        <input
-                                            type="text"
-                                            name="phone"
-                                            id="phone"
-                                            defaultValue={editingEmployee?.phone}
-                                            required
-                                            className="mt-1 p-2.5 text-gray-600 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm"
-                                        />
-                                    </div>
-                                </div>
-                                <div className="grid grid-cols-2 gap-4">
-                                    <div>
-                                        <label htmlFor="position" className="block text-sm font-medium text-gray-700">
-                                            Position
-                                        </label>
-                                        <input
-                                            type="text"
-                                            name="position"
-                                            id="position"
-                                            defaultValue={editingEmployee?.position}
-                                            required
-                                            className="mt-1 p-2.5 text-gray-600 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm"
-                                        />
-                                    </div>
-                                    <div>
-                                        <label htmlFor="department" className="block text-sm font-medium text-gray-700">
-                                            Department
-                                        </label>
-                                        <input
-                                            type="text"
-                                            name="department"
-                                            id="department"
-                                            defaultValue={editingEmployee?.department}
-                                            required
-                                            className="mt-1 p-2.5 text-gray-600 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm"
-                                        />
-                                    </div>
-                                </div>
-
-                                <div>
-                                    <label htmlFor="hireDate" className="block text-sm font-medium text-gray-700">
-                                        Hire Date
-                                    </label>
-                                    <input
-                                        type="date"
-                                        name="hireDate"
-                                        id="hireDate"
-                                        defaultValue={editingEmployee?.hireDate}
+                                    <Input
+                                        label="First Name"
+                                        name="firstName"
+                                        id="firstName"
+                                        defaultValue={editingEmployee?.firstName}
                                         required
-                                        className="mt-1 p-2.5 text-gray-600 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm"
+                                    />
+                                    <Input
+                                        label="Last Name"
+                                        name="lastName"
+                                        id="lastName"
+                                        defaultValue={editingEmployee?.lastName}
+                                        required
                                     />
                                 </div>
-                                <div>
-                                    <label htmlFor="companyId" className="block text-sm font-medium text-gray-700">
-                                        Company
-                                    </label>
-                                    <select
+                                <div className="grid grid-cols-2 gap-4">
+                                    <Input
+                                        label="Email"
+                                        name="email"
+                                        id="email"
+                                        type="email"
+                                        defaultValue={editingEmployee?.email}
+                                        required
+                                    />
+                                    <Input
+                                        label="Phone"
+                                        name="phone"
+                                        id="phone"
+                                        defaultValue={editingEmployee?.phone}
+                                        required
+                                    />
+                                </div>
+                                <div className="grid grid-cols-2 gap-4">
+                                    <Input
+                                        label="Position"
+                                        name="position"
+                                        id="position"
+                                        defaultValue={editingEmployee?.position}
+                                        required
+                                    />
+                                    <Input
+                                        label="Department"
+                                        name="department"
+                                        id="department"
+                                        defaultValue={editingEmployee?.department}
+                                        required
+                                    />
+                                </div>
+
+                                <Input
+                                    label="Hire Date"
+                                    name="hireDate"
+                                    id="hireDate"
+                                    type="date"
+                                    defaultValue={editingEmployee?.hireDate}
+                                    required
+                                />
+
+                                {canManageCompanies ? (
+                                    <Select
+                                        label="Company"
                                         name="companyId"
                                         id="companyId"
-                                        defaultValue={editingEmployee?.companyId}
+                                        defaultValue={editingEmployee?.companyId || userCompanyId || ''}
                                         required
-                                        className="mt-1 p-2.5 text-gray-600 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm"
-                                    >
-                                        <option value="">Select a company</option>
-                                        {companies?.map((company) => (
-                                            <option key={company.id} value={company.id}>
-                                                {company.name}
-                                            </option>
-                                        ))}
-                                    </select>
-                                </div>
-                                <div>
-                                    <label htmlFor="status" className="block text-sm font-medium text-gray-700">
-                                        Status
-                                    </label>
-                                    <select
-                                        name="status"
-                                        id="status"
-                                        defaultValue={editingEmployee?.status || 'active'}
-                                        required
-                                        className="mt-1 p-2.5 text-gray-600 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm"
-                                    >
-                                        <option value="active">Active</option>
-                                        <option value="inactive">Inactive</option>
-                                    </select>
-                                </div>
+                                        options={[
+                                            { value: '', label: 'Select a company' },
+                                            ...(companies?.map((company) => ({
+                                                value: company.id,
+                                                label: company.name
+                                            })) || [])
+                                        ]}
+                                    />
+                                ) : (
+                                    <input type="hidden" name="companyId" value={userCompanyId || ''} />
+                                )}
+
+                                <Select
+                                    label="Status"
+                                    name="status"
+                                    id="status"
+                                    defaultValue={editingEmployee?.status || 'active'}
+                                    required
+                                    options={[
+                                        { value: 'active', label: 'Active' },
+                                        { value: 'inactive', label: 'Inactive' }
+                                    ]}
+                                />
                             </div>
                             <div className="mt-6 flex justify-end space-x-3">
                                 <button
