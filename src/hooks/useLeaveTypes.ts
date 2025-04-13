@@ -26,6 +26,8 @@ export function useLeaveTypes(options: UseLeaveTypesOptions = {}) {
           companyId: '1',
           defaultDays: 20,
           isPaid: true,
+          createdAt: new Date().toISOString(),
+          updatedAt: new Date().toISOString(),
         },
         {
           id: '2',
@@ -34,6 +36,8 @@ export function useLeaveTypes(options: UseLeaveTypesOptions = {}) {
           companyId: '1',
           defaultDays: 10,
           isPaid: true,
+          createdAt: new Date().toISOString(),
+          updatedAt: new Date().toISOString(),
         },
         {
           id: '3',
@@ -42,6 +46,8 @@ export function useLeaveTypes(options: UseLeaveTypesOptions = {}) {
           companyId: '1',
           defaultDays: 90,
           isPaid: true,
+          createdAt: new Date().toISOString(),
+          updatedAt: new Date().toISOString(),
         },
         {
           id: '4',
@@ -49,6 +55,8 @@ export function useLeaveTypes(options: UseLeaveTypesOptions = {}) {
           description: 'Leave without pay',
           companyId: '1',
           isPaid: false,
+          createdAt: new Date().toISOString(),
+          updatedAt: new Date().toISOString(),
         },
       ];
 
